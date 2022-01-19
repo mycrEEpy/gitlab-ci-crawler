@@ -3,9 +3,9 @@ package neo4j
 import (
 	"errors"
 	"fmt"
-	"github.com/ardanlabs/conf/v2"
 	"strings"
 
+	"github.com/ardanlabs/conf/v2"
 	"github.com/deichindianer/gitlab-ci-crawler/internal/storage"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 	neo4jDriver "github.com/neo4j/neo4j-go-driver/v4/neo4j"
@@ -75,6 +75,24 @@ func (s *Storage) CreateIncludeEdge(include storage.IncludeEdge) error {
 		"ref":           include.Ref,
 		"files":         strings.Join(include.Files, ","),
 	}
+	_, err := s.Session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		result, err := transaction.Run(cypher, parameters)
+		if err != nil {
+			return nil, err
+		}
+
+		if result.Next() {
+			return nil, nil
+		}
+
+		return nil, result.Err()
+	})
+	return err
+}
+
+func (s *Storage) RemoveAll() error {
+	cypher := "MATCH (n) DETACH DELETE n"
+	parameters := map[string]interface{}{}
 	_, err := s.Session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
 		result, err := transaction.Run(cypher, parameters)
 		if err != nil {

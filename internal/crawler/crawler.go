@@ -50,8 +50,15 @@ func New(cfg *Config, logger zerolog.Logger, store storage.Storage) (*Crawler, e
 }
 
 // Crawl iterates through every project in the given GitLab host
-// and parses the CI file and it's includes into the given Neo4j instance
+// and parses the CI file, and it's includes into the given Neo4j instance
 func (c *Crawler) Crawl(ctx context.Context) error {
+	if c.config.StorageCleanup {
+		c.logger.Info().Msg("Cleanup storage...")
+		err := c.storage.RemoveAll()
+		if err != nil {
+			return err
+		}
+	}
 
 	c.logger.Info().Msg("Starting to crawl...")
 	resultChan := make(chan gitlab.Project, 200)
