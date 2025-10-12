@@ -6,7 +6,7 @@ toolchain go1.24.3
 
 require (
 	github.com/ardanlabs/conf/v3 v3.9.0
-	github.com/cenkalti/backoff/v5 v5.0.2
+	github.com/cenkalti/backoff/v5 v5.0.3
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/neo4j/neo4j-go-driver/v5 v5.28.4
 	github.com/rs/zerolog v1.34.0
