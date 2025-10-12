@@ -2,7 +2,7 @@ module github.com/catouc/gitlab-ci-crawler
 
 go 1.24.0
 
-toolchain go1.24.3
+toolchain go1.25.2
 
 require (
 	github.com/ardanlabs/conf/v3 v3.9.0
